@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Happy Birthday Bro 🚀</title>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background: black;
+      color: #00ffcc;
+    }
+
+    /* 🌌 GRID */
+    .grid {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(#00ffcc22 1px, transparent 1px),
+                  linear-gradient(90deg, #00ffcc22 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: perspective(500px) rotateX(60deg);
+      animation: moveGrid 5s linear infinite;
+    }
+
+    @keyframes moveGrid {
+      from { background-position: 0 0; }
+      to { background-position: 0 40px; }
+    }
+
+    /* 🧊 CARD */
+    .card {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 30px;
+      text-align: center;
+
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #00ffcc44;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+
+      box-shadow: 0 0 40px #00ffcc33;
+    }
+
+    h1 {
+      text-shadow: 0 0 20px #00ffcc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: black;
+      color: #00ffcc;
+      border: 1px solid #00ffcc;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00ffcc;
+      color: black;
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    img {
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffcc;
+      display: none;
+    }
+
+    /* 🎬 FINAL SCREEN */
+    .final-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .final-text {
+      font-size: 50px;
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<!-- 🎵 BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ⌨️ Typing Sound -->
+<audio id="typingSound">
+  <source src="typing.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 🔊 Voice Message -->
+<audio id="voice">
+  <source src="voice.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card" id="card">
+  <h1>Initializing Surprise...</h1>
+
+  <p id="msg" style="min-height:40px;">
+    Click below to start 🚀
+  </p>
+
+  <img id="photo" src="photo.jpg" width="220">
+
+  <br>
+  <button onclick="next()">NEXT</button>
+</div>
+
+<!-- 🎬 FINAL SCREEN -->
+<div class="final-screen" id="finalScreen">
+  <div class="final-text">
+    🎂 HAPPY BIRTHDAY BRO 🎂<br>
+    🚀 YOU ARE A LEGEND 🚀
+  </div>
+</div>
+
+<script>
+let messages = [
+  "System Booting...",
+  "Loading Memories...",
+  "Accessing Brother Database...",
+  "ERROR: No replacement found 😎",
+  "You are one of a kind bro 🔥",
+  "From fights to fun moments...",
+  "Now a 1st year engineer 💻",
+  "You will achieve big things 🚀",
+  "Get Ready..."
+];
+
+let i = 0;
+let started = false;
+
+function typeText(text, index = 0) {
+  let typing = document.getElementById("typingSound");
+
+  if (index === 0) {
+    typing.currentTime = 0;
+    typing.play();
+  }
+
+  if (index < text.length) {
+    document.getElementById("msg").innerText += text.charAt(index);
+    setTimeout(() => typeText(text, index + 1), 40);
+  } else {
+    typing.pause();
+  }
+}
+
+function confettiBlast() {
+  for (let i = 0; i < 100; i++) {
+    let span = document.createElement("span");
+    span.style.position = "absolute";
+    span.style.width = "8px";
+    span.style.height = "8px";
+    span.style.background = "#00ffcc";
+    span.style.left = Math.random() * 100 + "vw";
+    span.style.top = "-10px";
+    span.style.animation = "fall 3s linear";
+    document.body.appendChild(span);
+
+    setTimeout(() => span.remove(), 3000);
+  }
+}
+
+function next() {
+  document.getElementById("msg").innerText = "";
+
+  let music = document.getElementById("bgMusic");
+
+  if (!started) {
+    music.play();
+    started = true;
+  }
+
+  if (i === messages.length - 2) {
+    document.getElementById("photo").style.display = "block";
+  }
+
+  if (i === messages.length - 1) {
+    confettiBlast();
+
+    // 🔊 Play voice message
+    document.getElementById("voice").play();
+
+    setTimeout(() => {
+      document.getElementById("card").style.display = "none";
+      document.getElementById("finalScreen").style.display = "flex";
+    }, 3000);
+  }
+
+  typeText(messages[i]);
+  i++;
+
+  if (i >= messages.length) {
+    i = 0;
+  }
+}
+</script>
+
+</body>
+</html>
